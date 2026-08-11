@@ -77,3 +77,40 @@ fn ambiguous_join_column_fails_during_binding() {
     };
     assert!(error.to_string().contains("ambiguous column"));
 }
+
+#[test]
+fn hash_join_matches_compatible_integer_and_float_keys() {
+    let mut engine = Engine::default();
+    engine.config.join_preference = JoinPreference::Hash;
+    engine.register(
+        Table::from_rows(
+            "integers",
+            vec![field("id")],
+            vec![vec![Value::Int64(0)], vec![Value::Int64(2)]],
+        )
+        .unwrap(),
+    );
+    engine.register(
+        Table::from_rows(
+            "floats",
+            vec![Field {
+                qualifier: None,
+                name: "id".into(),
+                data_type: DataType::Float64,
+                nullable: false,
+            }],
+            vec![vec![Value::Float64(-0.0)], vec![Value::Float64(2.0)]],
+        )
+        .unwrap(),
+    );
+    let QueryResult::Data { execution, .. } = engine
+        .query("SELECT i.id AS id FROM integers i INNER JOIN floats f ON i.id = f.id ORDER BY id")
+        .unwrap()
+    else {
+        panic!()
+    };
+    assert_eq!(
+        execution.data.rows(),
+        vec![vec![Value::Int64(0)], vec![Value::Int64(2)]]
+    );
+}

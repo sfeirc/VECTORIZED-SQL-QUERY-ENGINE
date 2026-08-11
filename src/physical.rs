@@ -1,4 +1,5 @@
-use crate::logical::{LogicalPlan, NamedExpr, ScalarExpr, SortExpr};
+use crate::ast::BinaryOp;
+use crate::logical::{LogicalPlan, NamedExpr, ScalarExpr, SortExpr, estimate_scan_rows};
 use crate::storage::Table;
 use crate::types::{Field, Schema};
 use serde::Serialize;
@@ -151,13 +152,7 @@ impl PhysicalPlan {
         match self {
             Self::ColumnScan {
                 table, predicates, ..
-            } => {
-                if predicates.is_empty() {
-                    table.stats.row_count
-                } else {
-                    (table.stats.row_count / 10).max(1)
-                }
-            }
+            } => estimate_scan_rows(table, predicates),
             Self::Filter { input, .. } => (input.estimated_rows() / 10).max(1),
             Self::Projection { input, .. } | Self::Sort { input, .. } => input.estimated_rows(),
             Self::HashAggregate {
@@ -166,11 +161,46 @@ impl PhysicalPlan {
                 if group_by.is_empty() {
                     1
                 } else {
-                    (input.estimated_rows() / 10).max(1)
+                    estimate_groups(input, group_by)
                 }
             }
-            Self::Join { left, right, .. } => left.estimated_rows().max(right.estimated_rows()),
+            Self::Join {
+                left, right, on, ..
+            } => estimate_join(left, right, on),
             Self::Limit { count, input } => (*count).min(input.estimated_rows()),
+        }
+    }
+
+    pub fn column_distinct(&self, index: usize) -> Option<usize> {
+        match self {
+            Self::ColumnScan { table, .. } => table
+                .stats
+                .columns
+                .get(index)
+                .map(|statistics| statistics.cardinality),
+            Self::Filter { input, .. } | Self::Sort { input, .. } | Self::Limit { input, .. } => {
+                input.column_distinct(index)
+            }
+            Self::Projection {
+                expressions, input, ..
+            }
+            | Self::HashAggregate {
+                expressions, input, ..
+            } => expressions.get(index).and_then(|expression| {
+                if let ScalarExpr::Column { index, .. } = expression.expr {
+                    input.column_distinct(index)
+                } else {
+                    None
+                }
+            }),
+            Self::Join { left, right, .. } => {
+                let left_width = left.schema().len();
+                if index < left_width {
+                    left.column_distinct(index)
+                } else {
+                    right.column_distinct(index - left_width)
+                }
+            }
         }
     }
 
@@ -244,4 +274,55 @@ impl PhysicalPlan {
             Self::Limit { count, .. } => format!("Limit {count}"),
         }
     }
+}
+
+fn estimate_groups(plan: &PhysicalPlan, expressions: &[ScalarExpr]) -> usize {
+    let fallback = (plan.estimated_rows() / 10).max(1);
+    expressions
+        .iter()
+        .try_fold(1usize, |groups, expression| {
+            let ScalarExpr::Column { index, .. } = expression else {
+                return None;
+            };
+            Some(groups.saturating_mul(plan.column_distinct(*index)?))
+        })
+        .unwrap_or(fallback)
+        .min(plan.estimated_rows())
+        .max(1)
+}
+
+fn estimate_join(left: &PhysicalPlan, right: &PhysicalPlan, on: &ScalarExpr) -> usize {
+    let fallback = left.estimated_rows().max(right.estimated_rows());
+    let ScalarExpr::Binary {
+        left: first,
+        op: BinaryOp::Eq,
+        right: second,
+        ..
+    } = on
+    else {
+        return fallback;
+    };
+    let (ScalarExpr::Column { index: a, .. }, ScalarExpr::Column { index: b, .. }) =
+        (&**first, &**second)
+    else {
+        return fallback;
+    };
+    let left_width = left.schema().len();
+    let (left_index, right_index) = if *a < left_width && *b >= left_width {
+        (*a, *b - left_width)
+    } else if *b < left_width && *a >= left_width {
+        (*b, *a - left_width)
+    } else {
+        return fallback;
+    };
+    let Some(divisor) = left
+        .column_distinct(left_index)
+        .zip(right.column_distinct(right_index))
+        .map(|(a, b)| a.max(b).max(1))
+    else {
+        return fallback;
+    };
+    left.estimated_rows()
+        .saturating_mul(right.estimated_rows())
+        .div_ceil(divisor)
 }

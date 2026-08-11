@@ -1,7 +1,8 @@
-use crate::ast::AggregateFunction;
+use crate::ast::{AggregateFunction, BinaryOp, UnaryOp};
 use crate::logical::{NamedExpr, ScalarExpr, SortExpr};
 use crate::optimizer::{eval_binary, eval_unary};
 use crate::physical::{JoinAlgorithm, PhysicalPlan};
+use crate::storage::ColumnData;
 use crate::types::{DataType, Schema, Value};
 use crate::{Error, Result};
 use serde::Serialize;
@@ -33,7 +34,7 @@ impl Default for ExecutionConfig {
 #[derive(Debug, Clone)]
 pub struct DataSet {
     pub schema: Schema,
-    pub columns: Vec<Vec<Value>>,
+    pub columns: Vec<Option<ColumnData>>,
     pub row_count: usize,
 }
 
@@ -41,14 +42,22 @@ impl DataSet {
     pub fn row(&self, index: usize) -> Vec<Value> {
         self.columns
             .iter()
-            .map(|column| column.get(index).cloned().unwrap_or(Value::Null))
+            .map(|column| {
+                column
+                    .as_ref()
+                    .map_or(Value::Null, |values| values.value(index))
+            })
             .collect()
     }
     pub fn rows(&self) -> Vec<Vec<Value>> {
         (0..self.row_count).map(|index| self.row(index)).collect()
     }
     pub fn estimated_bytes(&self) -> usize {
-        self.columns.iter().flatten().map(value_bytes).sum()
+        self.columns
+            .iter()
+            .flatten()
+            .map(ColumnData::estimated_bytes)
+            .sum()
     }
 }
 
@@ -114,32 +123,35 @@ fn execute_node(plan: &PhysicalPlan, config: &ExecutionConfig) -> Result<Executi
             predicates,
         } => {
             let schema = plan.schema();
-            let mut columns = vec![Vec::new(); schema.len()];
-            let chunk = effective_batch(config);
-            for start in (0..table.stats.row_count).step_by(chunk) {
-                let end = (start + chunk).min(table.stats.row_count);
-                let selected = (start..end)
-                    .filter(|row| {
-                        predicates.iter().all(|predicate| {
-                            eval_expr(predicate, &|index| Ok(table.columns[index].value(*row)))
-                                .ok()
-                                .and_then(|v| v.as_bool())
-                                .unwrap_or(false)
-                        })
-                    })
-                    .collect::<Vec<_>>();
-                for &index in read_columns {
-                    columns[index]
-                        .extend(selected.iter().map(|row| table.columns[index].value(*row)));
-                }
-            }
+            let mut columns = vec![None; schema.len()];
             let row_count = if predicates.is_empty() {
+                for &index in read_columns {
+                    columns[index] = Some(table.columns[index].clone());
+                }
                 table.stats.row_count
             } else {
-                columns
-                    .iter()
-                    .find(|c| !c.is_empty())
-                    .map_or_else(|| count_scan_matches(table, predicates), Vec::len)
+                let chunk = effective_batch(config);
+                let mut selected = Vec::with_capacity(table.stats.row_count / 10);
+                for start in (0..table.stats.row_count).step_by(chunk) {
+                    let end = (start + chunk).min(table.stats.row_count);
+                    selected.extend((start..end).filter(|row| {
+                        predicates.iter().all(|predicate| {
+                            fast_predicate(predicate, *row, &|index| table.columns.get(index))
+                                .unwrap_or_else(|| {
+                                    eval_expr(predicate, &|index| {
+                                        Ok(table.columns[index].value(*row))
+                                    })
+                                    .ok()
+                                    .and_then(|v| v.as_bool())
+                                    .unwrap_or(false)
+                                })
+                        })
+                    }));
+                }
+                for &index in read_columns {
+                    columns[index] = Some(table.columns[index].take(&selected));
+                }
+                selected.len()
             };
             let _ = alias;
             (
@@ -242,8 +254,17 @@ fn selected_rows(data: &DataSet, predicate: &ScalarExpr, batch: usize) -> Result
     for start in (0..data.row_count).step_by(batch) {
         let end = (start + batch).min(data.row_count);
         for row in start..end {
-            if eval_expr(predicate, &|index| data_value(data, index, row))?.as_bool() == Some(true)
-            {
+            let keep = fast_predicate(predicate, row, &|index| {
+                data.columns.get(index).and_then(Option::as_ref)
+            })
+            .map_or_else(
+                || {
+                    eval_expr(predicate, &|index| data_value(data, index, row))
+                        .map(|value| value.as_bool() == Some(true))
+                },
+                Ok,
+            )?;
+            if keep {
                 selected.push(row);
             }
         }
@@ -251,17 +272,124 @@ fn selected_rows(data: &DataSet, predicate: &ScalarExpr, batch: usize) -> Result
     Ok(selected)
 }
 
+fn fast_predicate<'a>(
+    expression: &ScalarExpr,
+    row: usize,
+    column: &impl Fn(usize) -> Option<&'a ColumnData>,
+) -> Option<bool> {
+    match expression {
+        ScalarExpr::Literal(Value::Boolean(value)) => Some(*value),
+        ScalarExpr::Unary {
+            op: UnaryOp::Not,
+            expr,
+            ..
+        } => fast_predicate(expr, row, column).map(|value| !value),
+        ScalarExpr::Binary {
+            left,
+            op: BinaryOp::And,
+            right,
+            ..
+        } => Some(fast_predicate(left, row, column)? && fast_predicate(right, row, column)?),
+        ScalarExpr::Binary {
+            left,
+            op: BinaryOp::Or,
+            right,
+            ..
+        } => Some(fast_predicate(left, row, column)? || fast_predicate(right, row, column)?),
+        ScalarExpr::Binary {
+            left, op, right, ..
+        } if is_comparison(*op) => match (&**left, &**right) {
+            (ScalarExpr::Column { index, .. }, ScalarExpr::Literal(value)) => {
+                Some(compare_column_literal(column(*index)?, row, *op, value))
+            }
+            (ScalarExpr::Literal(value), ScalarExpr::Column { index, .. }) => Some(
+                compare_column_literal(column(*index)?, row, reverse_comparison(*op), value),
+            ),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+fn is_comparison(op: BinaryOp) -> bool {
+    matches!(
+        op,
+        BinaryOp::Eq
+            | BinaryOp::NotEq
+            | BinaryOp::Lt
+            | BinaryOp::LtEq
+            | BinaryOp::Gt
+            | BinaryOp::GtEq
+    )
+}
+
+fn reverse_comparison(op: BinaryOp) -> BinaryOp {
+    match op {
+        BinaryOp::Lt => BinaryOp::Gt,
+        BinaryOp::LtEq => BinaryOp::GtEq,
+        BinaryOp::Gt => BinaryOp::Lt,
+        BinaryOp::GtEq => BinaryOp::LtEq,
+        other => other,
+    }
+}
+
+fn compare_column_literal(column: &ColumnData, row: usize, op: BinaryOp, literal: &Value) -> bool {
+    match (column, literal) {
+        (ColumnData::Int64(values), Value::Int64(right)) => {
+            values[row].is_some_and(|left| compare_ordered(left, *right, op))
+        }
+        (ColumnData::Int64(values), Value::Float64(right)) => {
+            values[row].is_some_and(|left| compare_ordered(left as f64, *right, op))
+        }
+        (ColumnData::Float64(values), Value::Int64(right)) => {
+            values[row].is_some_and(|left| compare_ordered(left, *right as f64, op))
+        }
+        (ColumnData::Float64(values), Value::Float64(right)) => {
+            values[row].is_some_and(|left| compare_ordered(left, *right, op))
+        }
+        (ColumnData::Utf8(values), Value::Utf8(right)) => values[row]
+            .as_ref()
+            .is_some_and(|left| compare_ordered(left.as_str(), right.as_str(), op)),
+        (ColumnData::Boolean(values), Value::Boolean(right)) => {
+            values[row].is_some_and(|left| compare_ordered(left, *right, op))
+        }
+        (_, Value::Null) => false,
+        _ => false,
+    }
+}
+
+fn compare_ordered<T: PartialEq + PartialOrd>(left: T, right: T, op: BinaryOp) -> bool {
+    match op {
+        BinaryOp::Eq => left == right,
+        BinaryOp::NotEq => left != right,
+        BinaryOp::Lt => left < right,
+        BinaryOp::LtEq => left <= right,
+        BinaryOp::Gt => left > right,
+        BinaryOp::GtEq => left >= right,
+        _ => false,
+    }
+}
+
 fn project(data: &DataSet, expressions: &[NamedExpr], batch: usize) -> Result<DataSet> {
-    let mut columns = vec![Vec::with_capacity(data.row_count); expressions.len()];
-    for start in (0..data.row_count).step_by(batch) {
-        let end = (start + batch).min(data.row_count);
-        for (column, expression) in columns.iter_mut().zip(expressions) {
+    let mut columns = Vec::with_capacity(expressions.len());
+    for expression in expressions {
+        if let ScalarExpr::Column { index, .. } = expression.expr {
+            columns.push(Some(data_column(data, index)?.clone()));
+            continue;
+        }
+        let mut column = ColumnData::with_capacity(expression.expr.data_type(), data.row_count)
+            .map_err(|error| Error::Execution(error.to_string()))?;
+        for start in (0..data.row_count).step_by(batch) {
+            let end = (start + batch).min(data.row_count);
             for row in start..end {
-                column.push(eval_expr(&expression.expr, &|index| {
-                    data_value(data, index, row)
-                })?);
+                column
+                    .push(eval_expr(&expression.expr, &|index| {
+                        data_value(data, index, row)
+                    })?)
+                    .map_err(|error| Error::Execution(error.to_string()))?;
             }
         }
+        columns.push(Some(column));
     }
     let schema = expressions
         .iter()
@@ -306,13 +434,24 @@ fn aggregate(
     }
     let mut entries = groups.into_iter().collect::<Vec<_>>();
     entries.sort_by(|a, b| format!("{:?}", a.0).cmp(&format!("{:?}", b.0)));
-    let mut columns = vec![Vec::with_capacity(entries.len()); expressions.len()];
+    let row_count = entries.len();
+    let mut columns = expressions
+        .iter()
+        .map(|expression| {
+            ColumnData::with_capacity(expression.expr.data_type(), row_count)
+                .map(Some)
+                .map_err(|error| Error::Execution(error.to_string()))
+        })
+        .collect::<Result<Vec<_>>>()?;
     for (_, states) in entries {
         for (column, state) in columns.iter_mut().zip(states) {
-            column.push(state.finish());
+            column
+                .as_mut()
+                .expect("aggregate columns are materialized")
+                .push(state.finish())
+                .map_err(|error| Error::Execution(error.to_string()))?;
         }
     }
-    let row_count = columns.first().map_or(0, Vec::len);
     let schema = expressions
         .iter()
         .map(|expression| crate::types::Field {
@@ -452,7 +591,8 @@ fn initial_states(expressions: &[NamedExpr]) -> Vec<AggState> {
 }
 
 fn nested_loop_join(left: &DataSet, right: &DataSet, on: &ScalarExpr) -> Result<DataSet> {
-    let mut columns = vec![Vec::new(); left.columns.len() + right.columns.len()];
+    let mut columns = empty_join_columns(left, right, 0)?;
+    let mut row_count = 0;
     for l in 0..left.row_count {
         for r in 0..right.row_count {
             let value = eval_expr(on, &|index| {
@@ -463,11 +603,12 @@ fn nested_loop_join(left: &DataSet, right: &DataSet, on: &ScalarExpr) -> Result<
                 }
             })?;
             if value.as_bool() == Some(true) {
-                append_join_row(&mut columns, left, l, right, r);
+                append_join_row(&mut columns, left, l, right, r)?;
+                row_count += 1;
             }
         }
     }
-    joined_data(left, right, columns)
+    Ok(joined_data(left, right, columns, row_count))
 }
 
 fn hash_join(left: &DataSet, right: &DataSet, on: &ScalarExpr) -> Result<DataSet> {
@@ -492,68 +633,140 @@ fn hash_join(left: &DataSet, right: &DataSet, on: &ScalarExpr) -> Result<DataSet
     } else {
         return nested_loop_join(left, right, on);
     };
-    let mut hash: HashMap<String, Vec<usize>> = HashMap::new();
+    let mut hash: HashMap<JoinKey, Vec<usize>> = HashMap::new();
     for row in 0..left.row_count {
-        let value = data_value(left, left_key, row)?;
-        if !value.is_null() {
-            hash.entry(hash_key(&value)).or_default().push(row);
+        if let Some(key) = join_key_at(data_column(left, left_key)?, row) {
+            hash.entry(key).or_default().push(row);
         }
     }
-    let mut columns = vec![Vec::new(); left.columns.len() + right.columns.len()];
+    let mut columns = empty_join_columns(left, right, right.row_count)?;
+    let mut row_count = 0;
     for r in 0..right.row_count {
-        let value = data_value(right, right_key, r)?;
-        if value.is_null() {
+        let Some(key) = join_key_at(data_column(right, right_key)?, r) else {
             continue;
-        }
-        if let Some(matches) = hash.get(&hash_key(&value)) {
+        };
+        if let Some(matches) = hash.get(&key) {
             for &l in matches {
-                if eval_expr(on, &|index| {
-                    if index < width {
-                        data_value(left, index, l)
-                    } else {
-                        data_value(right, index - width, r)
-                    }
-                })?
-                .as_bool()
-                    == Some(true)
-                {
-                    append_join_row(&mut columns, left, l, right, r);
+                if columns_equal(
+                    data_column(left, left_key)?,
+                    l,
+                    data_column(right, right_key)?,
+                    r,
+                ) {
+                    append_join_row(&mut columns, left, l, right, r)?;
+                    row_count += 1;
                 }
             }
         }
     }
-    joined_data(left, right, columns)
+    Ok(joined_data(left, right, columns, row_count))
 }
-fn hash_key(value: &Value) -> String {
-    match value {
-        Value::Int64(v) => format!("n:{:.17}", *v as f64),
-        Value::Float64(v) => format!("n:{v:.17}"),
-        _ => format!("{value:?}"),
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+enum JoinKey {
+    Numeric(u64),
+    Utf8(String),
+    Boolean(bool),
+}
+
+fn join_key_at(column: &ColumnData, row: usize) -> Option<JoinKey> {
+    match column {
+        ColumnData::Int64(values) => {
+            values[row].map(|value| JoinKey::Numeric(normalized_float_bits(value as f64)))
+        }
+        ColumnData::Float64(values) => {
+            values[row].map(|value| JoinKey::Numeric(normalized_float_bits(value)))
+        }
+        ColumnData::Utf8(values) => values[row].clone().map(JoinKey::Utf8),
+        ColumnData::Boolean(values) => values[row].map(JoinKey::Boolean),
+    }
+}
+
+fn normalized_float_bits(value: f64) -> u64 {
+    if value == 0.0 {
+        0.0f64.to_bits()
+    } else {
+        value.to_bits()
+    }
+}
+
+fn columns_equal(left: &ColumnData, left_row: usize, right: &ColumnData, right_row: usize) -> bool {
+    match (left, right) {
+        (ColumnData::Int64(a), ColumnData::Int64(b)) => {
+            matches!((a[left_row], b[right_row]), (Some(a), Some(b)) if a == b)
+        }
+        (ColumnData::Float64(a), ColumnData::Float64(b)) => {
+            matches!((a[left_row], b[right_row]), (Some(a), Some(b)) if a == b)
+        }
+        (ColumnData::Int64(a), ColumnData::Float64(b)) => {
+            matches!((a[left_row], b[right_row]), (Some(a), Some(b)) if a as f64 == b)
+        }
+        (ColumnData::Float64(a), ColumnData::Int64(b)) => {
+            matches!((a[left_row], b[right_row]), (Some(a), Some(b)) if a == b as f64)
+        }
+        (ColumnData::Utf8(a), ColumnData::Utf8(b)) => {
+            matches!((&a[left_row], &b[right_row]), (Some(a), Some(b)) if a == b)
+        }
+        (ColumnData::Boolean(a), ColumnData::Boolean(b)) => {
+            matches!((a[left_row], b[right_row]), (Some(a), Some(b)) if a == b)
+        }
+        _ => false,
     }
 }
 fn append_join_row(
-    columns: &mut [Vec<Value>],
+    columns: &mut [Option<ColumnData>],
     left: &DataSet,
     l: usize,
     right: &DataSet,
     r: usize,
-) {
+) -> Result<()> {
     for (i, column) in left.columns.iter().enumerate() {
-        columns[i].push(column.get(l).cloned().unwrap_or(Value::Null));
+        if let (Some(output), Some(input)) = (&mut columns[i], column) {
+            output
+                .push_from(input, l)
+                .map_err(|error| Error::Execution(error.to_string()))?;
+        }
     }
     for (i, column) in right.columns.iter().enumerate() {
-        columns[left.columns.len() + i].push(column.get(r).cloned().unwrap_or(Value::Null));
+        if let (Some(output), Some(input)) = (&mut columns[left.columns.len() + i], column) {
+            output
+                .push_from(input, r)
+                .map_err(|error| Error::Execution(error.to_string()))?;
+        }
     }
+    Ok(())
 }
-fn joined_data(left: &DataSet, right: &DataSet, columns: Vec<Vec<Value>>) -> Result<DataSet> {
+fn empty_join_columns(
+    left: &DataSet,
+    right: &DataSet,
+    capacity: usize,
+) -> Result<Vec<Option<ColumnData>>> {
+    left.columns
+        .iter()
+        .chain(&right.columns)
+        .map(|column| {
+            column
+                .as_ref()
+                .map(|values| {
+                    ColumnData::with_capacity(values.data_type(), capacity)
+                        .map_err(|error| Error::Execution(error.to_string()))
+                })
+                .transpose()
+        })
+        .collect()
+}
+fn joined_data(
+    left: &DataSet,
+    right: &DataSet,
+    columns: Vec<Option<ColumnData>>,
+    row_count: usize,
+) -> DataSet {
     let mut schema = left.schema.clone();
     schema.extend(right.schema.clone());
-    let row_count = columns.iter().find(|c| !c.is_empty()).map_or(0, Vec::len);
-    Ok(DataSet {
+    DataSet {
         schema,
         columns,
         row_count,
-    })
+    }
 }
 
 fn sort(data: &DataSet, keys: &[SortExpr]) -> Result<DataSet> {
@@ -594,10 +807,12 @@ fn eval_expr(expr: &ScalarExpr, get: &impl Fn(usize) -> Result<Value>) -> Result
     }
 }
 fn data_value(data: &DataSet, column: usize, row: usize) -> Result<Value> {
+    Ok(data_column(data, column)?.value(row))
+}
+fn data_column(data: &DataSet, column: usize) -> Result<&ColumnData> {
     data.columns
         .get(column)
-        .and_then(|values| values.get(row))
-        .cloned()
+        .and_then(Option::as_ref)
         .ok_or_else(|| {
             Error::Execution(format!(
                 "column {column} was pruned but later required (planner bug)"
@@ -610,36 +825,10 @@ fn take_rows(data: &DataSet, indices: &[usize]) -> DataSet {
         columns: data
             .columns
             .iter()
-            .map(|column| {
-                if column.is_empty() {
-                    Vec::new()
-                } else {
-                    indices.iter().map(|i| column[*i].clone()).collect()
-                }
-            })
+            .map(|column| column.as_ref().map(|values| values.take(indices)))
             .collect(),
         row_count: indices.len(),
     }
-}
-fn value_bytes(value: &Value) -> usize {
-    match value {
-        Value::Int64(_) | Value::Float64(_) => 8,
-        Value::Boolean(_) => 1,
-        Value::Utf8(v) => v.len(),
-        Value::Null => 0,
-    }
-}
-fn count_scan_matches(table: &crate::storage::Table, predicates: &[ScalarExpr]) -> usize {
-    (0..table.stats.row_count)
-        .filter(|row| {
-            predicates.iter().all(|predicate| {
-                eval_expr(predicate, &|index| Ok(table.columns[index].value(*row)))
-                    .ok()
-                    .and_then(|v| v.as_bool())
-                    == Some(true)
-            })
-        })
-        .count()
 }
 
 #[cfg(test)]
@@ -730,5 +919,17 @@ mod tests {
         .data
         .rows();
         assert_eq!(vector, tuple);
+    }
+
+    #[test]
+    fn typed_filter_kernel_handles_reversed_and_null_comparisons() {
+        assert_eq!(
+            run("SELECT amount FROM sales WHERE 15 < amount").rows(),
+            vec![vec![Value::Int64(20)]]
+        );
+        assert_eq!(
+            run("SELECT amount FROM sales WHERE amount = NULL").row_count,
+            0
+        );
     }
 }

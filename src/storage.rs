@@ -19,11 +19,15 @@ pub enum ColumnData {
 
 impl ColumnData {
     pub fn empty(data_type: DataType) -> Result<Self> {
+        Self::with_capacity(data_type, 0)
+    }
+
+    pub fn with_capacity(data_type: DataType, capacity: usize) -> Result<Self> {
         Ok(match data_type {
-            DataType::Int64 => Self::Int64(Vec::new()),
-            DataType::Float64 => Self::Float64(Vec::new()),
-            DataType::Utf8 => Self::Utf8(Vec::new()),
-            DataType::Boolean => Self::Boolean(Vec::new()),
+            DataType::Int64 => Self::Int64(Vec::with_capacity(capacity)),
+            DataType::Float64 => Self::Float64(Vec::with_capacity(capacity)),
+            DataType::Utf8 => Self::Utf8(Vec::with_capacity(capacity)),
+            DataType::Boolean => Self::Boolean(Vec::with_capacity(capacity)),
             DataType::Null => {
                 return Err(Error::Storage(
                     "NULL cannot be a physical column type".into(),
@@ -83,6 +87,40 @@ impl ColumnData {
             }
         }
         Ok(())
+    }
+
+    pub fn push_from(&mut self, source: &Self, index: usize) -> Result<()> {
+        match (self, source) {
+            (Self::Int64(output), Self::Int64(input)) => output.push(input[index]),
+            (Self::Float64(output), Self::Float64(input)) => output.push(input[index]),
+            (Self::Utf8(output), Self::Utf8(input)) => output.push(input[index].clone()),
+            (Self::Boolean(output), Self::Boolean(input)) => output.push(input[index]),
+            (output, input) => {
+                return Err(Error::Storage(format!(
+                    "cannot copy {} values into {} column",
+                    input.data_type(),
+                    output.data_type()
+                )));
+            }
+        }
+        Ok(())
+    }
+
+    pub fn take(&self, indices: &[usize]) -> Self {
+        match self {
+            Self::Int64(values) => {
+                Self::Int64(indices.iter().map(|index| values[*index]).collect())
+            }
+            Self::Float64(values) => {
+                Self::Float64(indices.iter().map(|index| values[*index]).collect())
+            }
+            Self::Utf8(values) => {
+                Self::Utf8(indices.iter().map(|index| values[*index].clone()).collect())
+            }
+            Self::Boolean(values) => {
+                Self::Boolean(indices.iter().map(|index| values[*index]).collect())
+            }
+        }
     }
 
     pub fn estimated_bytes(&self) -> usize {
