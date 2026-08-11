@@ -37,6 +37,7 @@ impl<'a> Binder<'a> {
             read_columns: (0..table.schema.len()).collect(),
             table,
             alias,
+            predicates: Vec::new(),
         };
         for join in &select.joins {
             let right_table = self
@@ -62,6 +63,7 @@ impl<'a> Binder<'a> {
                 read_columns: (0..right_table.schema.len()).collect(),
                 table: right_table,
                 alias: right_alias,
+                predicates: Vec::new(),
             };
             let mut join_schema = plan.schema();
             join_schema.extend(right.schema());

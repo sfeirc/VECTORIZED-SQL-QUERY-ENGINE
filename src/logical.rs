@@ -114,6 +114,7 @@ pub enum LogicalPlan {
         table: Arc<Table>,
         alias: String,
         read_columns: Vec<usize>,
+        predicates: Vec<ScalarExpr>,
     },
     Filter {
         predicate: ScalarExpr,
@@ -229,13 +230,15 @@ impl LogicalPlan {
                 table,
                 alias,
                 read_columns,
+                predicates,
             } => format!(
-                "Scan {} AS {} [rows={}, columns={}/{}]",
+                "Scan {} AS {} [rows={}, columns={}/{}, pushed_filters={}]",
                 table.name,
                 alias,
                 table.stats.row_count,
                 read_columns.len(),
-                table.schema.len()
+                table.schema.len(),
+                predicates.len()
             ),
             Self::Filter { predicate, .. } => {
                 format!("Filter {predicate} [est_rows={}]", self.estimated_rows())
