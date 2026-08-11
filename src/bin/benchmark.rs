@@ -34,6 +34,7 @@ struct Measurement {
     rows_output: usize,
     end_to_end_ns: u128,
     execution_ns: u128,
+    rows_per_second: f64,
     output_memory_bytes: usize,
     configuration: BTreeMap<String, String>,
 }
@@ -43,6 +44,15 @@ struct BenchmarkOutput {
     environment: Environment,
     generator: BTreeMap<String, String>,
     measurements: Vec<Measurement>,
+}
+
+#[derive(Serialize)]
+struct MetricSummary {
+    samples: usize,
+    median_execution_ns: u128,
+    p95_execution_ns: u128,
+    median_rows_per_second: f64,
+    median_output_memory_bytes: usize,
 }
 
 fn main() {
@@ -177,6 +187,10 @@ fn run() -> Result<()> {
     fs::write(
         output.join("summary.json"),
         serde_json::to_string_pretty(&summary).unwrap(),
+    )?;
+    fs::write(
+        output.join("metrics.json"),
+        serde_json::to_string_pretty(&summarize_metrics(&output_data.measurements)).unwrap(),
     )?;
     fs::write(output.join("results.svg"), render_svg(&summary))?;
     println!(
@@ -317,7 +331,7 @@ fn engine(customer: &Table, orders: &Table, lineitem: &Table) -> Engine {
 fn run_query_case(
     experiment: &str,
     variant: &str,
-    rows: usize,
+    _nominal_rows: usize,
     iterations: usize,
     engine: Engine,
     sql: &str,
@@ -334,14 +348,16 @@ fn run_query_case(
         let QueryResult::Data { execution, .. } = result else {
             unreachable!()
         };
+        let rows_input = scanned_rows(&execution.profile);
         output.push(Measurement {
             experiment: experiment.into(),
             variant: variant.into(),
             iteration,
-            rows_input: rows,
+            rows_input,
             rows_output: execution.data.row_count,
             end_to_end_ns: elapsed,
             execution_ns: execution.profile.elapsed_ns,
+            rows_per_second: throughput(rows_input, execution.profile.elapsed_ns),
             output_memory_bytes: execution.profile.memory_bytes,
             configuration: configuration.clone(),
         });
@@ -386,6 +402,7 @@ fn benchmark_storage(
                 rows_output: rows.len(),
                 end_to_end_ns: elapsed,
                 execution_ns: elapsed,
+                rows_per_second: throughput(rows.len(), elapsed),
                 output_memory_bytes: if variant == "row" {
                     rows.iter().flatten().map(std::mem::size_of_val).sum()
                 } else {
@@ -405,6 +422,22 @@ fn command_output(program: &str, args: &[&str]) -> String {
         .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
         .filter(|s| !s.is_empty())
         .unwrap_or_else(|| "unavailable".into())
+}
+
+fn scanned_rows(profile: &lamina_sql::execution::OperatorProfile) -> usize {
+    if profile.operator == "ColumnScan" {
+        profile.rows_in
+    } else {
+        profile.children.iter().map(scanned_rows).sum()
+    }
+}
+
+fn throughput(rows: usize, elapsed_ns: u128) -> f64 {
+    if elapsed_ns == 0 {
+        0.0
+    } else {
+        rows as f64 * 1_000_000_000.0 / elapsed_ns as f64
+    }
 }
 fn environment() -> Environment {
     Environment {
@@ -459,11 +492,63 @@ fn summarize(measurements: &[Measurement]) -> BTreeMap<String, BTreeMap<String, 
         })
         .collect()
 }
+fn summarize_metrics(
+    measurements: &[Measurement],
+) -> BTreeMap<String, BTreeMap<String, MetricSummary>> {
+    let mut grouped: BTreeMap<String, BTreeMap<String, Vec<&Measurement>>> = BTreeMap::new();
+    for measurement in measurements {
+        grouped
+            .entry(measurement.experiment.clone())
+            .or_default()
+            .entry(measurement.variant.clone())
+            .or_default()
+            .push(measurement);
+    }
+    grouped
+        .into_iter()
+        .map(|(experiment, variants)| {
+            let variants = variants
+                .into_iter()
+                .map(|(variant, values)| {
+                    let mut elapsed = values
+                        .iter()
+                        .map(|value| value.execution_ns)
+                        .collect::<Vec<_>>();
+                    let mut rates = values
+                        .iter()
+                        .map(|value| value.rows_per_second)
+                        .collect::<Vec<_>>();
+                    let mut memory = values
+                        .iter()
+                        .map(|value| value.output_memory_bytes)
+                        .collect::<Vec<_>>();
+                    elapsed.sort();
+                    rates.sort_by(f64::total_cmp);
+                    memory.sort();
+                    let p95_index = ((elapsed.len() as f64 * 0.95).ceil() as usize)
+                        .saturating_sub(1)
+                        .min(elapsed.len() - 1);
+                    (
+                        variant,
+                        MetricSummary {
+                            samples: elapsed.len(),
+                            median_execution_ns: elapsed[elapsed.len() / 2],
+                            p95_execution_ns: elapsed[p95_index],
+                            median_rows_per_second: rates[rates.len() / 2],
+                            median_output_memory_bytes: memory[memory.len() / 2],
+                        },
+                    )
+                })
+                .collect();
+            (experiment, variants)
+        })
+        .collect()
+}
 fn write_csv(path: &Path, values: &[Measurement]) -> Result<()> {
-    let mut csv = "experiment,variant,iteration,rows_input,rows_output,end_to_end_ns,execution_ns,output_memory_bytes\n".to_string();
+    let mut csv = "experiment,variant,iteration,rows_input,rows_output,end_to_end_ns,execution_ns,rows_per_second,output_memory_bytes\n".to_string();
     for m in values {
         csv.push_str(&format!(
-            "{},{},{},{},{},{},{},{}\n",
+            "{},{},{},{},{},{},{},{:.3},{}\n",
             m.experiment,
             m.variant,
             m.iteration,
@@ -471,6 +556,7 @@ fn write_csv(path: &Path, values: &[Measurement]) -> Result<()> {
             m.rows_output,
             m.end_to_end_ns,
             m.execution_ns,
+            m.rows_per_second,
             m.output_memory_bytes
         ));
     }

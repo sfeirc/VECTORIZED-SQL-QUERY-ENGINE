@@ -12,25 +12,36 @@ SQL  SELECT c.region, SUM(o.total) AS revenue ...
                 ├── ColumnScan customers [columns=2/3]
                 └── ColumnScan orders [columns=2/3, pushed_filters=1]
 
-HashJoin [est=20, in=144, out=140, 0.569 ms, 62.5%, 4,150 bytes]
+HashJoin [est=137, in=144, out=140]
 ```
 
-![Measured benchmark medians](benchmarks/results/2026-08-11-windows/results.svg)
+![Measured before-and-after speedups](benchmarks/results/2026-08-11-optimized-final/comparison.svg)
 
-The figure contains measured medians from three release-build iterations on the machine recorded in [raw.json](benchmarks/results/2026-08-11-windows/raw.json). The 20,000-row generator is deterministic and TPC-H-shaped, but **is not official `dbgen` output and is not a TPC-H-compliant result**.
+The figure compares 11 release-build iterations from the pre-refactor commit `bcb1c18` with 11 iterations from typed-execution commit `3015476`. Both raw runs record the same machine and workload. The 20,000-row generator is deterministic and TPC-H-shaped, but **is not official `dbgen` output and is not a TPC-H-compliant result**.
 
 ## Measured results
 
+### Typed-execution refactor versus baseline
+
+| Hot path | Baseline | Typed execution | Measured speedup |
+|---|---|---:|---:|
+| Pushed filter | 1.517 ms | 0.211 ms | 7.20× |
+| Projection-pruned scan | 2.574 ms | 0.347 ms | 7.43× |
+| Hash join | 9.642 ms | 1.653 ms | 5.83× |
+| Vectorized filter/projection | 2.027 ms | 0.568 ms | 3.57× |
+
+### Current engine: controlled design comparisons
+
 | Experiment | Compared variants | Median execution time | Observed ratio |
 |---|---|---:|---:|
-| Row vs column scan | row / column | 0.159 / 0.061 ms | column 2.58× faster |
-| Predicate pushdown | off / on | 2.793 / 0.666 ms | on 4.19× faster |
-| Projection pruning | off / on | 4.693 / 2.253 ms | on 2.08× faster |
-| Join algorithm | nested loop / hash | 134.837 / 4.876 ms | hash 27.66× faster |
-| Execution model | tuple / batches of 1,024 | 1.478 / 0.935 ms | batches 1.58× faster |
-| Batch size | 1 / best observed (4,096) | 1.694 / 0.919 ms | 4,096 was 1.84× faster |
+| Row vs column scan | row / column | 0.090 / 0.068 ms | column 1.32× faster |
+| Predicate pushdown | off / on | 0.622 / 0.211 ms | on 2.95× faster |
+| Projection pruning | off / on | 1.976 / 0.347 ms | on 5.70× faster |
+| Join algorithm | nested loop / hash | 183.162 / 1.653 ms | hash 110.83× faster |
+| Execution model | tuple / batches of 1,024 | 0.598 / 0.568 ms | batches 1.05× faster |
+| Batch size | 1 / best observed (1,024) | 0.593 / 0.563 ms | 1,024 was 1.05× faster |
 
-These ratios apply only to the checked-in configuration and machine. CPU utilization was not sampled; the harness records wall time and estimated result allocation. “Vectorized” means column-oriented batch processing, not SIMD. Read the [benchmark methodology](benchmarks/README.md) before interpreting the figures.
+These ratios apply only to the checked-in configuration and machine. CPU utilization was not sampled; the harness records wall time and estimated result allocation. “Vectorized” means column-oriented batch processing, not SIMD. The small current tuple/batch gap is reported rather than overstated. Read the [benchmark methodology](benchmarks/README.md), [raw baseline](benchmarks/results/2026-08-11-baseline11-bcb1c18/raw.json), [raw optimized run](benchmarks/results/2026-08-11-optimized-final/raw.json), and [generated comparison](benchmarks/results/2026-08-11-optimized-final/comparison.md) before interpreting the figures.
 
 ## Architecture
 
@@ -108,7 +119,7 @@ The optimizer performs:
 - statistics-driven inner-join input reordering while preserving output order;
 - physical hash/nested-loop selection from equality shape and estimated input size.
 
-Execution materializes column vectors in configurable batches. Filters create selection indices, projections evaluate a column at a time per batch, aggregation uses a hash table keyed by group values, and equi-joins build a hash table on one input. Every operator records estimated rows, rows in/out, inclusive elapsed time, and estimated output bytes.
+Execution retains primitive typed columns through scans and intermediate batches. Filters create selection indices, direct projections bulk-copy typed columns, computed projections evaluate a column at a time per batch, aggregation uses a hash table keyed by group values, and equi-joins build typed allocation-free numeric keys. Common column-versus-literal predicates use specialized kernels; unsupported expression shapes fall back to the general scalar evaluator. Every operator records estimated rows, rows in/out, inclusive elapsed time, and estimated output bytes.
 
 `LAM1` is deliberately small: a magic/version marker, table and field metadata, typed column sections, and per-value null markers. Table statistics include row count, min/max, exact in-memory cardinality, and null count. It is not a durable transactional format.
 
@@ -122,7 +133,7 @@ The interesting work is maintaining semantic and positional invariants across st
 make check
 ```
 
-The current suite contains 26 tests covering lexer/parser behavior, binding and type failures, plans and optimizer rules, storage round trips, both join algorithms, execution, tuple/batch equivalence, generated property cases, and a differential aggregate query against SQLite. The SQLite dependency is compiled only for tests.
+The current suite contains 30 tests covering lexer/parser behavior, binding and type failures, plans and optimizer rules, statistics-based estimates, typed filter kernels, storage round trips, both join algorithms, cross-numeric join keys, execution, tuple/batch equivalence, generated property cases, benchmark comparison logic, and a differential aggregate query against SQLite. The SQLite dependency is compiled only for tests.
 
 GitHub Actions runs formatting, Clippy with warnings denied, all-target tests, a release build, and RustSec dependency auditing. Dependabot covers Cargo crates and Actions. The workflow is checked in; this local repository has no GitHub remote, so no hosted Actions run is claimed.
 
@@ -145,8 +156,8 @@ Architectural choices and rejected alternatives live in [docs/adr](docs/adr): ha
 - This is a single-process, single-threaded educational engine, not production-ready software.
 - Expressions are scalar inside columnar batches; there is no SIMD, JIT, morsel scheduling, or parallel pipeline execution.
 - Intermediate operators materialize complete column sets; there is no spill-to-disk or memory budget.
-- Cardinality estimation uses deliberately crude heuristics (commonly 10% filter selectivity) plus base-table statistics.
-- Hash keys use a normalized string representation to align integer/float equality; this is correct for tested values but allocation-heavy.
+- Cardinality estimation uses min/max and distinct counts for supported shapes, but assumes uniform ranges, ignores correlation, and falls back to 10% for unknown predicates.
+- Numeric hash keys normalize through `f64` bits so compatible integer/float keys share buckets; direct typed equality preserves correctness, but very large integers can create extra collisions.
 - Null handling is partial and does not implement every SQL three-valued-logic edge case.
 - CSV inference is whole-file and the parser supports quoted fields, but not embedded newlines.
 - `LAM1` has no checksums, compression, schema evolution, or cross-endian guarantee.
