@@ -2,6 +2,7 @@
 name = "lamina-sql"
 version = "0.1.0"
 edition = "2024"
+default-run = "lamina"
 license = "MIT"
 description = "A small vectorized analytical SQL engine built from first principles"
 

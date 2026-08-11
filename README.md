@@ -56,10 +56,10 @@ The core does not embed SQLite or DuckDB. `rusqlite` is a development-only depen
 Requires stable Rust (verified with Rust 1.93.1).
 
 ```bash
-make demo
+cargo run --release -- demo
 ```
 
-The demo needs no data download or configuration. It constructs two typed tables, prints the SQL, original and optimized logical plans, optimizer actions, physical plan, result table, and operator profile.
+The demo needs no data download or configuration. It constructs two typed tables, prints the SQL, original and optimized logical plans, optimizer actions, physical plan, result table, and operator profile. `make demo` is an equivalent convenience alias on systems with GNU Make.
 
 Query a CSV directly:
 
