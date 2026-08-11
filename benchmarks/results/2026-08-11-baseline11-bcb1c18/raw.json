@@ -1,0 +1,2089 @@
+{
+  "environment": {
+    "timestamp_utc": "2026-08-11T15:06:26.6381985Z",
+    "operating_system": "windows Microsoft Windows [version 10.0.26200.8893]",
+    "architecture": "x86_64",
+    "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+    "logical_cpus": 8,
+    "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+    "cargo": "cargo 1.93.1 (083ac5135 2025-12-15)",
+    "commit": "bcb1c18f175cd8b41c4bebb4188e143d09b9b78b",
+    "profile": "release (thin LTO, debug symbols)",
+    "cpu_utilization": "not sampled; wall-clock and estimated output allocation are recorded"
+  },
+  "generator": {
+    "description": "deterministic TPC-H-shaped synthetic data; not official dbgen output",
+    "lineitem_rows": "20000",
+    "seed": "formula-v1"
+  },
+  "measurements": [
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 295900,
+      "execution_ns": 295900,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 224100,
+      "execution_ns": 224100,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 108900,
+      "execution_ns": 108900,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 93500,
+      "execution_ns": 93500,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 90100,
+      "execution_ns": 90100,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 88500,
+      "execution_ns": 88500,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 84800,
+      "execution_ns": 84800,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 98600,
+      "execution_ns": 98600,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 85100,
+      "execution_ns": 85100,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 84500,
+      "execution_ns": 84500,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "row",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 84100,
+      "execution_ns": 84100,
+      "output_memory_bytes": 2880000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 88600,
+      "execution_ns": 88600,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 80900,
+      "execution_ns": 80900,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 72300,
+      "execution_ns": 72300,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 72800,
+      "execution_ns": 72800,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 64700,
+      "execution_ns": 64700,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 64900,
+      "execution_ns": 64900,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 67500,
+      "execution_ns": 67500,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 68300,
+      "execution_ns": 68300,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 67500,
+      "execution_ns": 67500,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 70100,
+      "execution_ns": 70100,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "A_storage_layout",
+      "variant": "column",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 68100,
+      "execution_ns": 68100,
+      "output_memory_bytes": 2100000,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1632700,
+      "execution_ns": 1559200,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1579600,
+      "execution_ns": 1509900,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1627400,
+      "execution_ns": 1558200,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1620400,
+      "execution_ns": 1560300,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1427900,
+      "execution_ns": 1362900,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1195100,
+      "execution_ns": 1150500,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1347900,
+      "execution_ns": 1300300,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1570700,
+      "execution_ns": 1504500,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 2251000,
+      "execution_ns": 2179500,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1589600,
+      "execution_ns": 1517200,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "on",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 1970400,
+      "execution_ns": 1782100,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 4141100,
+      "execution_ns": 4054700,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 4129600,
+      "execution_ns": 4044700,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 4758400,
+      "execution_ns": 4667100,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 3746300,
+      "execution_ns": 3648500,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 3563900,
+      "execution_ns": 3465700,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 3510100,
+      "execution_ns": 3440500,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 4184900,
+      "execution_ns": 4099700,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 3476100,
+      "execution_ns": 3388300,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 3333400,
+      "execution_ns": 3256100,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 2968000,
+      "execution_ns": 2904900,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "B_predicate_pushdown",
+      "variant": "off",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 3600,
+      "end_to_end_ns": 2790400,
+      "execution_ns": 2723100,
+      "output_memory_bytes": 57600,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 2144200,
+      "execution_ns": 1953700,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 2947400,
+      "execution_ns": 2785700,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 2405400,
+      "execution_ns": 2230900,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 3234900,
+      "execution_ns": 3047300,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 3169900,
+      "execution_ns": 2975300,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 2304500,
+      "execution_ns": 2163000,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 1787600,
+      "execution_ns": 1667800,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 2010200,
+      "execution_ns": 1863900,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 2758300,
+      "execution_ns": 2574000,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 3213400,
+      "execution_ns": 3036400,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "on",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 3302700,
+      "execution_ns": 3127400,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 9319000,
+      "execution_ns": 9124100,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 9012700,
+      "execution_ns": 8832400,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 9352700,
+      "execution_ns": 9170300,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 7797100,
+      "execution_ns": 7623400,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 8430000,
+      "execution_ns": 8244600,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 8300200,
+      "execution_ns": 8122000,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 8239200,
+      "execution_ns": 8060700,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 7840700,
+      "execution_ns": 7661100,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 6834800,
+      "execution_ns": 6665500,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 5548700,
+      "execution_ns": 5398900,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "C_projection_pruning",
+      "variant": "off",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 20000,
+      "end_to_end_ns": 5391400,
+      "execution_ns": 5263900,
+      "output_memory_bytes": 320000,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 180109700,
+      "execution_ns": 180007400,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 171216600,
+      "execution_ns": 171129900,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 184894500,
+      "execution_ns": 184796500,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 233055000,
+      "execution_ns": 232914200,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 259822700,
+      "execution_ns": 259672200,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 205959000,
+      "execution_ns": 205405800,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 184709300,
+      "execution_ns": 184600500,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 175174100,
+      "execution_ns": 175052700,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 166499900,
+      "execution_ns": 166411800,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 165361000,
+      "execution_ns": 165254700,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "nested_loop",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 191929200,
+      "execution_ns": 191826600,
+      "output_memory_bytes": 27501,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 9459700,
+      "execution_ns": 9245000,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 11626600,
+      "execution_ns": 11478200,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 12582600,
+      "execution_ns": 12421300,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 8040300,
+      "execution_ns": 7902600,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 9631500,
+      "execution_ns": 9536300,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 7186200,
+      "execution_ns": 7087400,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 9762400,
+      "execution_ns": 9641900,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 6670900,
+      "execution_ns": 6575800,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 10814300,
+      "execution_ns": 10719100,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 10530700,
+      "execution_ns": 10424600,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "D_join_algorithm",
+      "variant": "hash",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 2000,
+      "end_to_end_ns": 12501000,
+      "execution_ns": 12344900,
+      "output_memory_bytes": 27497,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3494800,
+      "execution_ns": 3413600,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3545900,
+      "execution_ns": 3444900,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 4351000,
+      "execution_ns": 4256800,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3500100,
+      "execution_ns": 3408900,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3760000,
+      "execution_ns": 3685000,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 4353200,
+      "execution_ns": 4254600,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3160100,
+      "execution_ns": 3079000,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2571400,
+      "execution_ns": 2518000,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2702700,
+      "execution_ns": 2625100,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2804600,
+      "execution_ns": 2739000,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "tuple",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2650100,
+      "execution_ns": 2582900,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2844300,
+      "execution_ns": 2733300,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1643200,
+      "execution_ns": 1570300,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2574800,
+      "execution_ns": 2477900,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2110100,
+      "execution_ns": 2026900,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2002400,
+      "execution_ns": 1922300,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2574400,
+      "execution_ns": 2478800,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2024200,
+      "execution_ns": 1942900,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2006100,
+      "execution_ns": 1931500,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2434300,
+      "execution_ns": 2330500,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2273200,
+      "execution_ns": 2178000,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "E_execution_model",
+      "variant": "vectorized",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1933300,
+      "execution_ns": 1850500,
+      "output_memory_bytes": 76800,
+      "configuration": {}
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3727000,
+      "execution_ns": 3652100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3288500,
+      "execution_ns": 3212200,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3262300,
+      "execution_ns": 3188300,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3279800,
+      "execution_ns": 3204800,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3548500,
+      "execution_ns": 3470400,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3209800,
+      "execution_ns": 3117100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3776400,
+      "execution_ns": 3658600,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3368400,
+      "execution_ns": 3275600,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3775400,
+      "execution_ns": 3680400,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3668200,
+      "execution_ns": 3564600,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3457000,
+      "execution_ns": 3351600,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2132600,
+      "execution_ns": 2064800,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2982400,
+      "execution_ns": 2898300,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3550700,
+      "execution_ns": 3452100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3074300,
+      "execution_ns": 2969100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1714500,
+      "execution_ns": 1643700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2010800,
+      "execution_ns": 1951900,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3029000,
+      "execution_ns": 2934500,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2607100,
+      "execution_ns": 2528700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2623100,
+      "execution_ns": 2494900,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3121900,
+      "execution_ns": 3015400,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "16",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2544800,
+      "execution_ns": 2447100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "16"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2866000,
+      "execution_ns": 2775500,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2286900,
+      "execution_ns": 2204000,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2430200,
+      "execution_ns": 2348000,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2313200,
+      "execution_ns": 2238500,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1933400,
+      "execution_ns": 1861700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2273400,
+      "execution_ns": 2205700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1836900,
+      "execution_ns": 1772100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1548500,
+      "execution_ns": 1502400,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2253300,
+      "execution_ns": 2204600,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2333600,
+      "execution_ns": 2274100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "64",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2475000,
+      "execution_ns": 2408400,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "64"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2808100,
+      "execution_ns": 2725400,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2179000,
+      "execution_ns": 2099700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2117700,
+      "execution_ns": 2048500,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2192700,
+      "execution_ns": 2116700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2162500,
+      "execution_ns": 2087700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 3145600,
+      "execution_ns": 3052500,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2235300,
+      "execution_ns": 2136100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2074300,
+      "execution_ns": 2006100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1697300,
+      "execution_ns": 1641800,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2047000,
+      "execution_ns": 1981200,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "256",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2046300,
+      "execution_ns": 1986700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "256"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1914700,
+      "execution_ns": 1844000,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1865000,
+      "execution_ns": 1806400,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1859300,
+      "execution_ns": 1804400,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2448800,
+      "execution_ns": 2378100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1958200,
+      "execution_ns": 1896100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1872500,
+      "execution_ns": 1821200,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1877100,
+      "execution_ns": 1824300,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1870300,
+      "execution_ns": 1819200,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2460200,
+      "execution_ns": 2391000,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1928500,
+      "execution_ns": 1862300,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "1024",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1879100,
+      "execution_ns": 1817900,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "1024"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 0,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1913800,
+      "execution_ns": 1852500,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 1,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1918900,
+      "execution_ns": 1861700,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 2,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2420400,
+      "execution_ns": 2348000,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 3,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1927100,
+      "execution_ns": 1874100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 4,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1968100,
+      "execution_ns": 1917300,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 5,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1978900,
+      "execution_ns": 1912200,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 6,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2008200,
+      "execution_ns": 1942200,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 7,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2472500,
+      "execution_ns": 2386600,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 8,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2118100,
+      "execution_ns": 2051000,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 9,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 2064300,
+      "execution_ns": 1993000,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    },
+    {
+      "experiment": "F_batch_size",
+      "variant": "4096",
+      "iteration": 10,
+      "rows_input": 20000,
+      "rows_output": 9600,
+      "end_to_end_ns": 1891200,
+      "execution_ns": 1830100,
+      "output_memory_bytes": 76800,
+      "configuration": {
+        "batch_size": "4096"
+      }
+    }
+  ]
+}

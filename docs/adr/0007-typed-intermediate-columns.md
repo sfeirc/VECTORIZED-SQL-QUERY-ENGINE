@@ -18,4 +18,4 @@ Use `ColumnData` for scans and intermediate batches, represent pruned columns as
 
 ## Consequences
 
-On equal 11-iteration runs, pushed filtering improved from 1.517 ms to 0.211 ms, projection-pruned scans from 2.574 ms to 0.347 ms, and hash join from 9.642 ms to 1.653 ms. The executor has more type-dispatch code and still materializes operator outputs. Batch size 1,024 is only 1.05× faster than tuple granularity in the optimized workload, so the change supports a typed-column claim—not a SIMD claim.
+On equal 11-iteration runs, pushed filtering improved from 1.517 ms to 0.193 ms, projection-pruned scans from 2.574 ms to 0.292 ms, and hash join from 9.642 ms to 1.675 ms. The executor has more type-dispatch code and still materializes operator outputs. Batch size 1,024 is only 1.07× faster than tuple granularity in the optimized workload, so the change supports a typed-column claim—not a SIMD claim.

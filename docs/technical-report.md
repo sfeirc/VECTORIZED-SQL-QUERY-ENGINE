@@ -18,7 +18,7 @@ The Volcano iterator model calls `next()` per tuple and composes operators lazil
 
 The implemented model processes typed column arrays in configurable batches. A scan reads referenced columns, pushed predicates select source positions, direct projections bulk-copy typed vectors, aggregation updates hash states, and joins produce typed columnar results. Column/literal comparisons have specialized kernels and numeric hash joins use typed keys without string formatting. More complex expression dispatch remains scalar and returns `Value`; therefore “vectorized” does not mean SIMD.
 
-Column stores keep values of one attribute together, reducing reads when a query references a subset of a wide schema. Row stores colocate all attributes of one entity, which is often favorable for point access. In the optimized recorded scan microbenchmark, reading the relevant column arrays took a 0.068 ms median versus 0.090 ms for row vectors. This workload is too small to attribute the ratio exclusively to cache misses; no hardware performance counters were collected.
+Column stores keep values of one attribute together, reducing reads when a query references a subset of a wide schema. Row stores colocate all attributes of one entity, which is often favorable for point access. In the optimized recorded scan microbenchmark, reading the relevant column arrays took a 0.040 ms median versus 0.059 ms for row vectors. This workload is too small to attribute the ratio exclusively to cache misses; no hardware performance counters were collected.
 
 ## Optimization and estimation
 
@@ -28,7 +28,7 @@ Statistics are exact when a table is constructed: row count, null count, min/max
 
 ## Join algorithms
 
-Nested-loop join evaluates the predicate for every input pair and supports general inner predicates. Hash join recognizes a two-column equality, builds a typed key-to-row-list table, probes it, and compares typed values to guard against normalized numeric-key collisions. Duplicate keys are retained. On the optimized recorded many-to-one join, hash join measured 1.653 ms versus 183.162 ms for nested loop. That 110.83× ratio is specific to 5,000 orders, 1,000 customers, and this implementation.
+Nested-loop join evaluates the predicate for every input pair and supports general inner predicates. Hash join recognizes a two-column equality, builds a typed key-to-row-list table, probes it, and compares typed values to guard against normalized numeric-key collisions. Duplicate keys are retained. On the optimized recorded many-to-one join, hash join measured 1.675 ms versus 178.135 ms for nested loop. That 106.36× ratio is specific to 5,000 orders, 1,000 customers, and this implementation.
 
 ## Storage
 

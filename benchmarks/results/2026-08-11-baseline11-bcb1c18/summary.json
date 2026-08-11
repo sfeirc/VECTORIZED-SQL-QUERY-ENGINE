@@ -1,0 +1,30 @@
+{
+  "A_storage_layout": {
+    "column": 68300,
+    "row": 90100
+  },
+  "B_predicate_pushdown": {
+    "off": 3465700,
+    "on": 1517200
+  },
+  "C_projection_pruning": {
+    "off": 8060700,
+    "on": 2574000
+  },
+  "D_join_algorithm": {
+    "hash": 9641900,
+    "nested_loop": 184600500
+  },
+  "E_execution_model": {
+    "tuple": 3408900,
+    "vectorized": 2026900
+  },
+  "F_batch_size": {
+    "1": 3351600,
+    "1024": 1824300,
+    "16": 2528700,
+    "256": 2087700,
+    "4096": 1917300,
+    "64": 2205700
+  }
+}

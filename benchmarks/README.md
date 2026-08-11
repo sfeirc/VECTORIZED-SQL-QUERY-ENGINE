@@ -10,7 +10,7 @@ cargo run --release --bin benchmark -- \
   --out benchmarks/results/2026-08-11-optimized-final
 ```
 
-Run metadata is in `raw.json`: Windows 10.0.26200.8893, x86-64 Intel Family 6 Model 140, 8 logical CPUs, Rust 1.93.1, commit `301547685a6e87b1187ed18b8c27672deb5dd7e4`, release profile with thin LTO. Two unrecorded warm-ups precede eleven measured iterations.
+Run metadata is in `raw.json`: Windows 10.0.26200.8893, x86-64 Intel Family 6 Model 140, 8 logical CPUs, Rust 1.93.1, commit `62586ac3303b8899f06b9718fa4b5707f606b717`, release profile with thin LTO. Two unrecorded warm-ups precede eleven measured iterations.
 
 The equal-iteration baseline is commit `bcb1c18f175cd8b41c4bebb4188e143d09b9b78b` in `results/2026-08-11-baseline11-bcb1c18`. It was executed from a detached Git worktree so the binary and recorded commit match.
 

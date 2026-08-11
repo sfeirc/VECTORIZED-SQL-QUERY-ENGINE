@@ -1,0 +1,126 @@
+{
+  "A_storage_layout": {
+    "column": {
+      "samples": 11,
+      "median_execution_ns": 39800,
+      "p95_execution_ns": 53200,
+      "median_rows_per_second": 502512562.81407034,
+      "median_output_memory_bytes": 2100000
+    },
+    "row": {
+      "samples": 11,
+      "median_execution_ns": 59200,
+      "p95_execution_ns": 248700,
+      "median_rows_per_second": 337837837.8378378,
+      "median_output_memory_bytes": 2880000
+    }
+  },
+  "B_predicate_pushdown": {
+    "off": {
+      "samples": 11,
+      "median_execution_ns": 528200,
+      "p95_execution_ns": 828600,
+      "median_rows_per_second": 37864445.285876565,
+      "median_output_memory_bytes": 115200
+    },
+    "on": {
+      "samples": 11,
+      "median_execution_ns": 192600,
+      "p95_execution_ns": 272700,
+      "median_rows_per_second": 103842159.91692626,
+      "median_output_memory_bytes": 115200
+    }
+  },
+  "C_projection_pruning": {
+    "off": {
+      "samples": 11,
+      "median_execution_ns": 1775500,
+      "p95_execution_ns": 2747100,
+      "median_rows_per_second": 11264432.554210082,
+      "median_output_memory_bytes": 640000
+    },
+    "on": {
+      "samples": 11,
+      "median_execution_ns": 292300,
+      "p95_execution_ns": 328200,
+      "median_rows_per_second": 68422853.23297982,
+      "median_output_memory_bytes": 640000
+    }
+  },
+  "D_join_algorithm": {
+    "hash": {
+      "samples": 11,
+      "median_execution_ns": 1674800,
+      "p95_execution_ns": 1934600,
+      "median_rows_per_second": 3582517.315500358,
+      "median_output_memory_bytes": 91497
+    },
+    "nested_loop": {
+      "samples": 11,
+      "median_execution_ns": 178135400,
+      "p95_execution_ns": 243831400,
+      "median_rows_per_second": 33682.24395600201,
+      "median_output_memory_bytes": 91501
+    }
+  },
+  "E_execution_model": {
+    "tuple": {
+      "samples": 11,
+      "median_execution_ns": 576800,
+      "p95_execution_ns": 612400,
+      "median_rows_per_second": 34674063.80027739,
+      "median_output_memory_bytes": 153600
+    },
+    "vectorized": {
+      "samples": 11,
+      "median_execution_ns": 536700,
+      "p95_execution_ns": 551800,
+      "median_rows_per_second": 37264766.16359232,
+      "median_output_memory_bytes": 153600
+    }
+  },
+  "F_batch_size": {
+    "1": {
+      "samples": 11,
+      "median_execution_ns": 579400,
+      "p95_execution_ns": 598200,
+      "median_rows_per_second": 34518467.38004833,
+      "median_output_memory_bytes": 153600
+    },
+    "1024": {
+      "samples": 11,
+      "median_execution_ns": 553800,
+      "p95_execution_ns": 628700,
+      "median_rows_per_second": 36114120.62116288,
+      "median_output_memory_bytes": 153600
+    },
+    "16": {
+      "samples": 11,
+      "median_execution_ns": 576400,
+      "p95_execution_ns": 604000,
+      "median_rows_per_second": 34698126.30117974,
+      "median_output_memory_bytes": 153600
+    },
+    "256": {
+      "samples": 11,
+      "median_execution_ns": 559900,
+      "p95_execution_ns": 568300,
+      "median_rows_per_second": 35720664.40435792,
+      "median_output_memory_bytes": 153600
+    },
+    "4096": {
+      "samples": 11,
+      "median_execution_ns": 556400,
+      "p95_execution_ns": 569600,
+      "median_rows_per_second": 35945363.04816679,
+      "median_output_memory_bytes": 153600
+    },
+    "64": {
+      "samples": 11,
+      "median_execution_ns": 559200,
+      "p95_execution_ns": 569200,
+      "median_rows_per_second": 35765379.113018595,
+      "median_output_memory_bytes": 153600
+    }
+  }
+}

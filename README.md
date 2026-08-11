@@ -17,7 +17,7 @@ HashJoin [est=137, in=144, out=140]
 
 ![Measured before-and-after speedups](benchmarks/results/2026-08-11-optimized-final/comparison.svg)
 
-The figure compares 11 release-build iterations from the pre-refactor commit `bcb1c18` with 11 iterations from typed-execution commit `3015476`. Both raw runs record the same machine and workload. The 20,000-row generator is deterministic and TPC-H-shaped, but **is not official `dbgen` output and is not a TPC-H-compliant result**.
+The figure compares 11 release-build iterations from the pre-refactor commit `bcb1c18` with 11 iterations from optimized commit `62586ac`. Both raw runs record the same machine and workload. The 20,000-row generator is deterministic and TPC-H-shaped, but **is not official `dbgen` output and is not a TPC-H-compliant result**.
 
 ## Measured results
 
@@ -25,21 +25,23 @@ The figure compares 11 release-build iterations from the pre-refactor commit `bc
 
 | Hot path | Baseline | Typed execution | Measured speedup |
 |---|---|---:|---:|
-| Pushed filter | 1.517 ms | 0.211 ms | 7.20× |
-| Projection-pruned scan | 2.574 ms | 0.347 ms | 7.43× |
-| Hash join | 9.642 ms | 1.653 ms | 5.83× |
-| Vectorized filter/projection | 2.027 ms | 0.568 ms | 3.57× |
+| Pushed filter | 1.517 ms | 0.193 ms | 7.88× |
+| Projection-pruned scan | 2.574 ms | 0.292 ms | 8.81× |
+| Hash join | 9.642 ms | 1.675 ms | 5.76× |
+| Vectorized filter/projection | 2.027 ms | 0.537 ms | 3.78× |
 
 ### Current engine: controlled design comparisons
 
 | Experiment | Compared variants | Median execution time | Observed ratio |
 |---|---|---:|---:|
-| Row vs column scan | row / column | 0.090 / 0.068 ms | column 1.32× faster |
-| Predicate pushdown | off / on | 0.622 / 0.211 ms | on 2.95× faster |
-| Projection pruning | off / on | 1.976 / 0.347 ms | on 5.70× faster |
-| Join algorithm | nested loop / hash | 183.162 / 1.653 ms | hash 110.83× faster |
-| Execution model | tuple / batches of 1,024 | 0.598 / 0.568 ms | batches 1.05× faster |
-| Batch size | 1 / best observed (1,024) | 0.593 / 0.563 ms | 1,024 was 1.05× faster |
+| Row vs column scan | row / column | 0.059 / 0.040 ms | column 1.49× faster |
+| Predicate pushdown | off / on | 0.528 / 0.193 ms | on 2.74× faster |
+| Projection pruning | off / on | 1.776 / 0.292 ms | on 6.07× faster |
+| Join algorithm | nested loop / hash | 178.135 / 1.675 ms | hash 106.36× faster |
+| Execution model | tuple / batches of 1,024 | 0.577 / 0.537 ms | batches 1.07× faster |
+| Batch size | 1 / best observed (1,024) | 0.579 / 0.554 ms | 1,024 was 1.05× faster |
+
+The optimized medians correspond to 103.8M scanned rows/s for pushed filtering, 68.4M rows/s for the projection-pruned scan, and 3.58M rows/s for hash join. These are input-scan rates for the exact benchmark cases, not universal throughput claims.
 
 These ratios apply only to the checked-in configuration and machine. CPU utilization was not sampled; the harness records wall time and estimated result allocation. “Vectorized” means column-oriented batch processing, not SIMD. The small current tuple/batch gap is reported rather than overstated. Read the [benchmark methodology](benchmarks/README.md), [raw baseline](benchmarks/results/2026-08-11-baseline11-bcb1c18/raw.json), [raw optimized run](benchmarks/results/2026-08-11-optimized-final/raw.json), and [generated comparison](benchmarks/results/2026-08-11-optimized-final/comparison.md) before interpreting the figures.
 

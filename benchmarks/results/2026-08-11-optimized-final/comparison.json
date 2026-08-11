@@ -1,0 +1,130 @@
+[
+  {
+    "experiment": "A_storage_layout",
+    "variant": "column",
+    "baseline_ns": 68300,
+    "candidate_ns": 39800,
+    "speedup": 1.7160804020100502,
+    "latency_change_percent": -41.72767203513909
+  },
+  {
+    "experiment": "A_storage_layout",
+    "variant": "row",
+    "baseline_ns": 90100,
+    "candidate_ns": 59200,
+    "speedup": 1.5219594594594594,
+    "latency_change_percent": -34.29522752497225
+  },
+  {
+    "experiment": "B_predicate_pushdown",
+    "variant": "off",
+    "baseline_ns": 3465700,
+    "candidate_ns": 528200,
+    "speedup": 6.56134040136312,
+    "latency_change_percent": -84.75921170326342
+  },
+  {
+    "experiment": "B_predicate_pushdown",
+    "variant": "on",
+    "baseline_ns": 1517200,
+    "candidate_ns": 192600,
+    "speedup": 7.877466251298027,
+    "latency_change_percent": -87.30556287898762
+  },
+  {
+    "experiment": "C_projection_pruning",
+    "variant": "off",
+    "baseline_ns": 8060700,
+    "candidate_ns": 1775500,
+    "speedup": 4.53996057448606,
+    "latency_change_percent": -77.97337700199735
+  },
+  {
+    "experiment": "C_projection_pruning",
+    "variant": "on",
+    "baseline_ns": 2574000,
+    "candidate_ns": 292300,
+    "speedup": 8.806021211084502,
+    "latency_change_percent": -88.64413364413363
+  },
+  {
+    "experiment": "D_join_algorithm",
+    "variant": "hash",
+    "baseline_ns": 9641900,
+    "candidate_ns": 1674800,
+    "speedup": 5.757045617387151,
+    "latency_change_percent": -82.62997956834234
+  },
+  {
+    "experiment": "D_join_algorithm",
+    "variant": "nested_loop",
+    "baseline_ns": 184600500,
+    "candidate_ns": 178135400,
+    "speedup": 1.0362931792333248,
+    "latency_change_percent": -3.5022115324714775
+  },
+  {
+    "experiment": "E_execution_model",
+    "variant": "tuple",
+    "baseline_ns": 3408900,
+    "candidate_ns": 576800,
+    "speedup": 5.91002080443828,
+    "latency_change_percent": -83.07958579013757
+  },
+  {
+    "experiment": "E_execution_model",
+    "variant": "vectorized",
+    "baseline_ns": 2026900,
+    "candidate_ns": 536700,
+    "speedup": 3.776597726849264,
+    "latency_change_percent": -73.52114065814791
+  },
+  {
+    "experiment": "F_batch_size",
+    "variant": "1",
+    "baseline_ns": 3351600,
+    "candidate_ns": 579400,
+    "speedup": 5.784604763548498,
+    "latency_change_percent": -82.71273421649362
+  },
+  {
+    "experiment": "F_batch_size",
+    "variant": "1024",
+    "baseline_ns": 1824300,
+    "candidate_ns": 553800,
+    "speedup": 3.294149512459372,
+    "latency_change_percent": -69.6431507975662
+  },
+  {
+    "experiment": "F_batch_size",
+    "variant": "16",
+    "baseline_ns": 2528700,
+    "candidate_ns": 576400,
+    "speedup": 4.38705759888966,
+    "latency_change_percent": -77.20567880729229
+  },
+  {
+    "experiment": "F_batch_size",
+    "variant": "256",
+    "baseline_ns": 2087700,
+    "candidate_ns": 559900,
+    "speedup": 3.7287015538489015,
+    "latency_change_percent": -73.18101259759544
+  },
+  {
+    "experiment": "F_batch_size",
+    "variant": "4096",
+    "baseline_ns": 1917300,
+    "candidate_ns": 556400,
+    "speedup": 3.445902228612509,
+    "latency_change_percent": -70.98002399207218
+  },
+  {
+    "experiment": "F_batch_size",
+    "variant": "64",
+    "baseline_ns": 2205700,
+    "candidate_ns": 559200,
+    "speedup": 3.944384835479256,
+    "latency_change_percent": -74.64750419368
+  }
+]
