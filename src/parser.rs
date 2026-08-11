@@ -157,10 +157,7 @@ impl Parser {
 
     fn parse_expr(&mut self, min_precedence: u8) -> Result<Expr> {
         let mut left = self.parse_prefix()?;
-        loop {
-            let Some((op, precedence)) = self.binary_op() else {
-                break;
-            };
+        while let Some((op, precedence)) = self.binary_op() {
             if precedence < min_precedence {
                 break;
             }
