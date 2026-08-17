@@ -1,6 +1,13 @@
 # Lamina SQL
 
+![Rust](https://img.shields.io/badge/Rust-2021-orange.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **A vectorized analytical SQL engine written from scratch in Rust, implementing parsing, logical/physical planning, predicate pushdown, columnar execution and hash joins, benchmarked on TPC-H-shaped workloads.**
+
+## Why this matters across industries
+
+Database-internals engineering — a real query planner, predicate pushdown, columnar/vectorized execution, and hash joins built from scratch rather than used off the shelf — is directly relevant to any data-platform or tech infrastructure role, to quant/finance (analytical query performance over trade/market data is a recurring bottleneck), and to consulting engagements needing genuine query-engine understanding rather than just SQL usage. The measured before/after optimization methodology below (real commits, real iterations, explicitly labeled as non-official TPC-H) is the same rigor a data-platform client audit expects.
 
 ```text
 SQL  SELECT c.region, SUM(o.total) AS revenue ...
